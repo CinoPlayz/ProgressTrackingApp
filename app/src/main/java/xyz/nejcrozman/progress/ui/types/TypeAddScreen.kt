@@ -1,4 +1,4 @@
-package xyz.nejcrozman.progress
+package xyz.nejcrozman.progress.ui.types
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,20 +22,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
+import xyz.nejcrozman.progress.ui.AppViewModelProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypesAddScreen(navController: NavHostController) {
+fun TypesAddScreen(navController: NavHostController,viewModel: TypeAddViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -67,9 +69,8 @@ fun TypesAddScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
 
                 ) {
-                var text by remember { mutableStateOf(TextFieldValue("")) }
                 OutlinedTextField(
-                    value = text,
+                    value = viewModel.typeUiState.typeDetails.name,
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth(),
@@ -77,11 +78,14 @@ fun TypesAddScreen(navController: NavHostController) {
                     label = { Text(text = "Type") },
                     placeholder = { Text(text = "Gaming, Reading...") },
                     onValueChange = {
-                        text = it
-                    }
+                        viewModel.updateUiState(viewModel.typeUiState.typeDetails.copy(name = it)) },
                 )
                 Button(modifier = Modifier.padding(paddingValues = PaddingValues(top = 20.dp)),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { coroutineScope.launch {
+                        viewModel.saveType()
+                        navController.popBackStack()
+                    }
+                    }) {
                     Text(text = "ADD")
                 }
             }

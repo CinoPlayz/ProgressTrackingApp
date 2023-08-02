@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import xyz.nejcrozman.progress.ui.theme.ProgressTheme
+import xyz.nejcrozman.progress.ui.types.TypesAddScreen
+import xyz.nejcrozman.progress.ui.types.TypesScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +38,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavigationAppHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "types" ){
-        composable(Destinations.Types.route){ TypesScreen(navController = navController)}
-        composable(Destinations.TypesAdd.route){ TypesAddScreen(navController = navController)}
+        composable(Destinations.Types.route){ TypesScreen(navController = navController) }
+        composable(Destinations.TypesAdd.route){ TypesAddScreen(navController = navController) }
     }
 
     

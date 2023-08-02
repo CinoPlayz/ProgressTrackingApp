@@ -1,4 +1,4 @@
-package xyz.nejcrozman.progress
+package xyz.nejcrozman.progress.ui.types
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import xyz.nejcrozman.progress.Destinations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
