@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Progress</string>
-    <string name="no_item_description">Oops!\nNo types of progress.\nTap + to add.</string>
+    <string name="noTypeDescription">Oops!\nNo types of progress.\nTap + to add.</string>
+    <string name="selectTypeDescription">Select type of improvement!</string>
+    <string name="labelID">ID:</string>
+    <string name="labelName">Name:</string>
+    <string name="typeAddTitle">Add Item</string>
 </resources>
