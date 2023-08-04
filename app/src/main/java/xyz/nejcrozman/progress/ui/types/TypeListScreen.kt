@@ -82,7 +82,7 @@ fun TypeListScreen(navController: NavHostController, viewModel: TypeListViewMode
                                     .padding(10.dp)
                                     .combinedClickable (
                                         onClick = { println("On click")},
-                                        onLongClick = { navController.navigate(Destinations.TypesDetail.createRoute(type.id))  },
+                                        onLongClick = { navController.navigate("${Destinations.TypesDetail.route}/${type.id}")  },
                                     )
                                 )
 

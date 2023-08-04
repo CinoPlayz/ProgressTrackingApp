@@ -1,11 +1,13 @@
 package xyz.nejcrozman.progress.ui
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import xyz.nejcrozman.progress.ProgressApplication
 import xyz.nejcrozman.progress.ui.types.TypeAddViewModel
+import xyz.nejcrozman.progress.ui.types.TypeDetailsViewModel
 import xyz.nejcrozman.progress.ui.types.TypeListViewModel
 
 /**
@@ -25,11 +27,12 @@ object AppViewModelProvider {
         }
 
         // Initializer for TypeDetailsViewModel
-        /*initializer {
-            ItemDetailsViewModel(
-                this.createSavedStateHandle()
+        initializer {
+            TypeDetailsViewModel(
+                this.createSavedStateHandle(),
+                progressApplication().container.typeRepository
             )
-        }*/
+        }
 
         // Initializer for TypeListViewModel
         initializer {

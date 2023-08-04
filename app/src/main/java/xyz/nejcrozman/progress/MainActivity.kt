@@ -9,9 +9,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import xyz.nejcrozman.progress.ui.theme.ProgressTheme
 import xyz.nejcrozman.progress.ui.types.TypeAddScreen
 import xyz.nejcrozman.progress.ui.types.TypeDetailScreen
@@ -41,13 +43,11 @@ fun NavigationAppHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "types" ){
         composable(Destinations.Types.route){ TypeListScreen(navController = navController) }
         composable(Destinations.TypesAdd.route){ TypeAddScreen(navController = navController) }
-        composable(Destinations.TypesDetail.route){ navBackStackEntry ->
-            val elementId = navBackStackEntry.arguments?.getString("elementId")
-            if(elementId == null){
-                println("ElementId is required")
-            } else{
-                TypeDetailScreen(navController = navController, elementId = elementId.toInt())
-            }
+        composable(route = Destinations.TypesDetail.routeWithArgs,
+            arguments = listOf(navArgument(Destinations.TypesDetail.itemIdArg) {
+                type = NavType.IntType
+            })){
+                TypeDetailScreen(navController = navController)
         }
     }
 
