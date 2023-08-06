@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import xyz.nejcrozman.progress.ProgressApplication
 import xyz.nejcrozman.progress.ui.types.TypeAddViewModel
 import xyz.nejcrozman.progress.ui.types.TypeDetailsViewModel
+import xyz.nejcrozman.progress.ui.types.TypeEditViewModel
 import xyz.nejcrozman.progress.ui.types.TypeListViewModel
 
 /**
@@ -16,11 +17,13 @@ import xyz.nejcrozman.progress.ui.types.TypeListViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         // Initializer for TypeEditViewModel
-        /*initializer {
+        initializer {
             TypeEditViewModel(
-                this.createSavedStateHandle()
+                this.createSavedStateHandle(),
+                progressApplication().container.typeRepository
             )
-        }*/
+        }
+
         // Initializer for TypeAddViewModel
         initializer {
             TypeAddViewModel(progressApplication().container.typeRepository)

@@ -105,7 +105,7 @@ fun TypeListScreen(
                                 modifier = Modifier
                                     .padding(10.dp)
                                     .combinedClickable(
-                                        onClick = { println("On click") },
+                                        onClick = { println("On click") /*TODO Open graph*/ },
                                         onLongClick = { navController.navigate("${Destinations.TypesDetail.route}/${type.id}") },
                                     )
                             )

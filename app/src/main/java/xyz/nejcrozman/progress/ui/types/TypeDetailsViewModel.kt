@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import xyz.nejcrozman.progress.Destinations
+import xyz.nejcrozman.progress.shared.TypeDetails
 import xyz.nejcrozman.progress.shared.repositories.TypeRepository
+import xyz.nejcrozman.progress.shared.toTypeDetails
 
 class TypeDetailsViewModel (
     savedStateHandle: SavedStateHandle,
@@ -30,7 +32,7 @@ class TypeDetailsViewModel (
             )
 
     companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
+        const val TIMEOUT_MILLIS = 5_000L
     }
 }
 

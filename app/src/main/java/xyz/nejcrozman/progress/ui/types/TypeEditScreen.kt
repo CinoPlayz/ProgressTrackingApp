@@ -22,26 +22,35 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import xyz.nejcrozman.progress.R
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TypeAddScreen(navController: NavHostController, viewModel: TypeAddViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+fun TypeEditScreen(
+    navController: NavHostController,
+    viewModel: TypeEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
 
     val coroutineScope = rememberCoroutineScope()
+    val uiState = viewModel.uiState.collectAsState()
 
     Scaffold(topBar = {
         TopAppBar(
             title = {
-                Text(text = "Add Type")
+                Text(text = "Edit Type")
             },
             colors = TopAppBarDefaults.smallTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -69,8 +78,16 @@ fun TypeAddScreen(navController: NavHostController, viewModel: TypeAddViewModel 
                 verticalArrangement = Arrangement.spacedBy(10.dp),
 
                 ) {
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = stringResource(R.string.labelID) + uiState.value.typeDetails.id.toString(),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 24.sp
+                )
                 OutlinedTextField(
-                    value = viewModel.typeUiState.typeDetails.name,
+                    value = uiState.value.typeDetails.name,
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth(),
@@ -78,18 +95,18 @@ fun TypeAddScreen(navController: NavHostController, viewModel: TypeAddViewModel 
                     label = { Text(text = "Type") },
                     placeholder = { Text(text = "Gaming, Reading...") },
                     onValueChange = {
-                        viewModel.updateUiState(viewModel.typeUiState.typeDetails.copy(name = it))
+                        viewModel.updateUiState(viewModel.uiState.value.typeDetails.copy(name = it))
                     },
                 )
                 Button(modifier = Modifier.padding(paddingValues = PaddingValues(top = 20.dp)),
-                    enabled = viewModel.typeUiState.isEntryValid,
+                    enabled = uiState.value.isEntryValid,
                     onClick = {
                         coroutineScope.launch {
-                            viewModel.saveType()
+                            viewModel.updateType()
                             navController.popBackStack()
                         }
                     }) {
-                    Text(text = "ADD")
+                    Text(text = "UPDATE")
                 }
             }
         })

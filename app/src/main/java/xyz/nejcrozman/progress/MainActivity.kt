@@ -17,6 +17,7 @@ import androidx.navigation.navArgument
 import xyz.nejcrozman.progress.ui.theme.ProgressTheme
 import xyz.nejcrozman.progress.ui.types.TypeAddScreen
 import xyz.nejcrozman.progress.ui.types.TypeDetailScreen
+import xyz.nejcrozman.progress.ui.types.TypeEditScreen
 import xyz.nejcrozman.progress.ui.types.TypeListScreen
 
 class MainActivity : ComponentActivity() {
@@ -43,11 +44,19 @@ fun NavigationAppHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "types" ){
         composable(Destinations.Types.route){ TypeListScreen(navController = navController) }
         composable(Destinations.TypesAdd.route){ TypeAddScreen(navController = navController) }
+
         composable(route = Destinations.TypesDetail.routeWithArgs,
             arguments = listOf(navArgument(Destinations.TypesDetail.itemIdArg) {
                 type = NavType.IntType
             })){
                 TypeDetailScreen(navController = navController)
+        }
+
+        composable(route = Destinations.TypesEdit.routeWithArgs,
+            arguments = listOf(navArgument(Destinations.TypesEdit.itemIdArg) {
+                type = NavType.IntType
+            })){
+            TypeEditScreen(navController = navController)
         }
     }
 

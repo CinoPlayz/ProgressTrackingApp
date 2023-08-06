@@ -8,4 +8,9 @@ sealed class Destinations(val route: String){
         val routeWithArgs = "$route/{$itemIdArg}"
     }
 
+    object TypesEdit: Destinations("types/edit" ){
+        const val itemIdArg = "elementId"
+        val routeWithArgs = "$route/{$itemIdArg}"
+    }
+
 }

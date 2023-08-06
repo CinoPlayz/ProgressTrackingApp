@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import xyz.nejcrozman.progress.shared.entities.Type
+import xyz.nejcrozman.progress.shared.TypeDetails
+import xyz.nejcrozman.progress.shared.TypeUiState
 import xyz.nejcrozman.progress.shared.repositories.TypeRepository
+import xyz.nejcrozman.progress.shared.toType
 
 /**
  * ViewModel to validate and insert items in the Room database.
@@ -41,40 +43,5 @@ class TypeAddViewModel(private val typeRepository: TypeRepository) : ViewModel()
 
 }
 
-data class TypeUiState(
-    val typeDetails: TypeDetails = TypeDetails(),
-    val isEntryValid: Boolean = false
-
-)
-
-data class TypeDetails(
-    val id: Int = 0,
-    val name: String = ""
-)
-
-/**
- * Extension function to convert [TypeDetails] to [Type].
- * */
-fun TypeDetails.toType(): Type = Type(
-    id = id,
-    name = name
-)
-
-
-/**
- * Extension function to convert [Type] to [TypeUiState]
- */
-fun Type.toTypeUiState(isEntryValid: Boolean = false): TypeUiState = TypeUiState(
-    typeDetails = this.toTypeDetails(),
-    isEntryValid = isEntryValid
-)
-
-/**
- * Extension function to convert [Type] to [TypeDetails]
- */
-fun Type.toTypeDetails(): TypeDetails = TypeDetails(
-    id = id,
-    name = name
-)
 
 

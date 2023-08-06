@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 
@@ -123,7 +124,7 @@ fun TypeDetailScreen(
                 }
 
                 Button(modifier = Modifier.padding(paddingValues = PaddingValues(top = 10.dp)),
-                    onClick = { /*navController.navigate(Destinations.TypesAdd.route)*/ }) {
+                    onClick = { navController.navigate("${Destinations.TypesEdit.route}/${elementId}") }) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Edit,
