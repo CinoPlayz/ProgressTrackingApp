@@ -14,4 +14,6 @@ class OfflineTypeRepository(private val typeDao: TypeDao): TypeRepository {
     override suspend fun update(type: Type) = typeDao.update(type)
 
     override suspend fun delete(type: Type) = typeDao.delete(type)
+
+    override suspend fun deleteById(id: Int)  = typeDao.deleteById(id)
 }

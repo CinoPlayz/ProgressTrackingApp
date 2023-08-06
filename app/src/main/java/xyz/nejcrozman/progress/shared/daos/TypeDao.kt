@@ -20,6 +20,9 @@ interface TypeDao {
     @Delete
     suspend fun delete(type: Type)
 
+    @Query("DELETE FROM types WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
     @Query("SELECT * from types WHERE id = :id")
     fun getType(id: Int): Flow<Type>
 

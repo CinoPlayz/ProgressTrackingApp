@@ -14,7 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +29,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,6 +49,7 @@ fun TypeDetailScreen(
     viewModel: TypeDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState = viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(topBar = {
         TopAppBar(
@@ -86,7 +90,9 @@ fun TypeDetailScreen(
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(top=15.dp), colors = CardDefaults.cardColors(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 15.dp), colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
@@ -137,8 +143,8 @@ fun TypeDetailScreen(
                 }
 
                 Button(modifier = Modifier.padding(paddingValues = PaddingValues(top = 10.dp)),
-                    onClick = { /*navController.navigate(Destinations.TypesAdd.route)*/ }) {
-                    Row {
+                    onClick = { viewModel.updateUiStateDialog(true) }) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = null,
@@ -148,6 +154,43 @@ fun TypeDetailScreen(
                     }
 
                 }
+                
+                
+                if(uiState.value.openDialog){
+                    AlertDialog(onDismissRequest = {  viewModel.updateUiStateDialog(false)},
+                    title = {
+                        Text(text = "Attention")
+                    },
+                    text = {
+                        Text(text = "Are you sure you want to delete?")
+                    },
+
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                    viewModel.updateUiStateDialog(false)
+                                    viewModel.deleteType(coroutineScope)
+                                    navController.popBackStack()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) {
+                            Text("Yes")
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+
+                            onClick = {
+                                viewModel.updateUiStateDialog(false)
+                            }) {
+                            Text("No")
+                        }
+                    }
+
+                        )
+                        
+
+                }
+                
 
 
             }

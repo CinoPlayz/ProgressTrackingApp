@@ -14,4 +14,6 @@ interface TypeRepository {
 
     suspend fun delete(type: Type)
 
+    suspend fun deleteById(id: Int)
+
 }

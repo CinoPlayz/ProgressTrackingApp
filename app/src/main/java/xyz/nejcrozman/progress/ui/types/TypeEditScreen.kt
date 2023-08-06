@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 
@@ -103,7 +104,7 @@ fun TypeEditScreen(
                     onClick = {
                         coroutineScope.launch {
                             viewModel.updateType()
-                            navController.popBackStack()
+                            navController.popBackStack(route = "${Destinations.TypesDetail.route}/${uiState.value.typeDetails.id}", inclusive = false)
                         }
                     }) {
                     Text(text = "UPDATE")
