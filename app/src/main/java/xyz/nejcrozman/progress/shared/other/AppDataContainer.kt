@@ -2,7 +2,9 @@ package xyz.nejcrozman.progress.shared.other
 
 import android.content.Context
 import xyz.nejcrozman.progress.shared.databases.ProgressDatabase
+import xyz.nejcrozman.progress.shared.repositories.OfflineProgressionRepository
 import xyz.nejcrozman.progress.shared.repositories.OfflineTypeRepository
+import xyz.nejcrozman.progress.shared.repositories.ProgressionRepository
 import xyz.nejcrozman.progress.shared.repositories.TypeRepository
 
 /**
@@ -10,6 +12,7 @@ import xyz.nejcrozman.progress.shared.repositories.TypeRepository
  */
 interface AppContainer {
     val typeRepository: TypeRepository
+    val progressionRepository: ProgressionRepository
 }
 
 /**
@@ -17,6 +20,11 @@ interface AppContainer {
  */
 class AppDataContainer(private val context: Context) : AppContainer {
     override val typeRepository: TypeRepository by lazy {
-        OfflineTypeRepository(ProgressDatabase.getDatabase(context).typeDeo())
+        OfflineTypeRepository(ProgressDatabase.getDatabase(context).typeDao())
     }
+
+    override val progressionRepository: ProgressionRepository by lazy {
+        OfflineProgressionRepository(ProgressDatabase.getDatabase(context).progressionDao())
+    }
+
 }

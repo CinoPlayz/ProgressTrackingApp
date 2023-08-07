@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "types")
 data class Type(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val type_id: Int = 0,
     val name: String
 )

@@ -23,7 +23,7 @@ data class TypeDetails(
  * Extension function to convert [TypeDetails] to [Type].
  * */
 fun TypeDetails.toType(): Type = Type(
-    id = id,
+    type_id = id,
     name = name
 )
 
@@ -40,7 +40,7 @@ fun Type.toTypeUiState(isEntryValid: Boolean = false): TypeUiState = TypeUiState
  * Extension function to convert [Type] to [TypeDetails]
  */
 fun Type.toTypeDetails(): TypeDetails = TypeDetails(
-    id = id,
+    id = type_id,
     name = name
 )
 

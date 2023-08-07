@@ -99,14 +99,14 @@ fun TypeListScreen(
                     )
                 } else {
                     LazyColumn(modifier = Modifier) {
-                        items(items = typeListUiState.value.typeList, key = { it.id }) { type ->
+                        items(items = typeListUiState.value.typeList, key = { it.type_id }) { type ->
                             ProgressType(
                                 type = type,
                                 modifier = Modifier
                                     .padding(10.dp)
                                     .combinedClickable(
                                         onClick = { println("On click") /*TODO Open graph*/ },
-                                        onLongClick = { navController.navigate("${Destinations.TypesDetail.route}/${type.id}") },
+                                        onLongClick = { navController.navigate("${Destinations.TypesDetail.route}/${type.type_id}") },
                                     )
                             )
 
