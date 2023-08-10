@@ -15,7 +15,7 @@ class OfflineProgressionRepository(private val progressionDao: ProgressionDao): 
 
     override fun getProgression(id: Int): Flow<Progression> = progressionDao.getProgression(id)
 
-    override fun getProgressionByTypeId(id: Int): Flow<Progression> = progressionDao.getProgressionByTypeId(id)
+    override fun getProgressionByTypeId(id: Int): Flow<List<Progression>> = progressionDao.getProgressionsByTypeId(id)
 
     override fun getAllProgressions(): Flow<List<Progression>> = progressionDao.getAllProgressions()
 }

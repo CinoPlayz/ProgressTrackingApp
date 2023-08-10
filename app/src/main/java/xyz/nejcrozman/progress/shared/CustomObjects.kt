@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import xyz.nejcrozman.progress.shared.entities.Progression
 import xyz.nejcrozman.progress.shared.entities.Type
+import java.time.LocalDateTime
 
 
 data class TypeUiState(
@@ -59,3 +61,31 @@ fun <T> Flow<T>.mutableStateIn(
 
     return flow
 }
+
+
+data class ProgressionAddUiState(
+    val progressionDetails: ProgressionDetails = ProgressionDetails(),
+    val isEntryValid: Boolean = true,
+    val valueString: String = "1"
+)
+
+
+data class ProgressionDetails (
+    val id: Int = 0,
+    val FK_type_id: Int = 0,
+    val value: Int = 1,
+    val dateOfProgress: LocalDateTime = LocalDateTime.now(),
+    val dateOfLastEdit: LocalDateTime = LocalDateTime.now()
+)
+
+/**
+ * Extension function to convert [ProgressionDetails] to [Progression].
+ * */
+fun ProgressionDetails.toProgression(): Progression = Progression(
+    progress_id = id,
+    FK_type_id = FK_type_id,
+    value = value,
+    dateOfProgress = dateOfProgress,
+    dateOfLastEdit = dateOfLastEdit
+)
+

@@ -13,4 +13,15 @@ sealed class Destinations(val route: String){
         val routeWithArgs = "$route/{$itemIdArg}"
     }
 
+
+    object ProgressionList: Destinations("progressions" ){
+        const val itemIdArg = "elementId"
+        val routeWithArgs = "$route/{$itemIdArg}"
+    }
+
+    object ProgressionAdd: Destinations("progression/add" ){
+        const val itemIdArg = "elementId"
+        val routeWithArgs = "$route/{$itemIdArg}"
+    }
+
 }

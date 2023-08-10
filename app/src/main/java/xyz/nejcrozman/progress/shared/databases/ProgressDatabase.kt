@@ -11,7 +11,7 @@ import xyz.nejcrozman.progress.shared.daos.TypeDao
 import xyz.nejcrozman.progress.shared.entities.Progression
 import xyz.nejcrozman.progress.shared.entities.Type
 
-@Database(entities = [Type::class, Progression::class], version = 2, exportSchema = false)
+@Database(entities = [Type::class, Progression::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ProgressDatabase: RoomDatabase() {
     abstract fun typeDao(): TypeDao

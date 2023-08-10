@@ -27,7 +27,7 @@ interface ProgressionDao {
     fun getProgression(id: Int): Flow<Progression>
 
     @Query("SELECT * from progression WHERE FK_type_id = :id")
-    fun getProgressionByTypeId(id: Int): Flow<Progression>
+    fun getProgressionsByTypeId(id: Int): Flow<List<Progression>>
 
     @Query("SELECT * from progression ORDER BY progress_id ASC")
     fun getAllProgressions(): Flow<List<Progression>>

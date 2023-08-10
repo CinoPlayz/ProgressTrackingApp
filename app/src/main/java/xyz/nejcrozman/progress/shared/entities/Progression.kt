@@ -20,7 +20,7 @@ data class Progression (
     val FK_type_id: Int = 0,
     val value: Int = 1,
     val dateOfProgress: LocalDateTime,
-    val dateOfEntry: LocalDateTime = LocalDateTime.now()
+    val dateOfLastEdit: LocalDateTime = LocalDateTime.now()
 ): Parcelable {
     /**
      * Converts [dateOfProgress] to string formatted like (dd.MM.yyyy)
@@ -29,9 +29,9 @@ data class Progression (
         get() =dateOfProgress.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 
     /**
-     * Converts [dateOfEntry] to string formatted like (dd.MM.yyyy)
+     * Converts [dateOfLastEdit] to string formatted like (dd.MM.yyyy)
      */
-    val getDOEFormatted : String
-        get() =dateOfEntry.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    val getDOLEFormatted : String
+        get() =dateOfLastEdit.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 
 }
