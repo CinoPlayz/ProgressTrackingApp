@@ -1,5 +1,11 @@
 package xyz.nejcrozman.progress.shared
 
+import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +72,8 @@ fun <T> Flow<T>.mutableStateIn(
 data class ProgressionAddUiState(
     val progressionDetails: ProgressionDetails = ProgressionDetails(),
     val isEntryValid: Boolean = true,
-    val valueString: String = "1"
+    val valueString: String = "1",
+    val openDateDialog: Boolean = false
 )
 
 
@@ -88,4 +95,34 @@ fun ProgressionDetails.toProgression(): Progression = Progression(
     dateOfProgress = dateOfProgress,
     dateOfLastEdit = dateOfLastEdit
 )
+
+
+
+
+
+
+class IconResource private constructor(
+    @DrawableRes private val resID: Int?,
+    private val imageVector: ImageVector?
+) {
+
+    @Composable
+    fun asPainterResource(): Painter {
+        resID?.let {
+            return painterResource(id = resID)
+        }
+        return rememberVectorPainter(image = imageVector!!)
+    }
+
+    companion object {
+        fun fromDrawableResource(@DrawableRes resID: Int): IconResource {
+            return IconResource(resID, null)
+        }
+
+        fun fromImageVector(imageVector: ImageVector?): IconResource {
+            return IconResource(null, imageVector)
+        }
+    }
+}
+
 

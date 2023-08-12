@@ -38,6 +38,11 @@ class ProgressionAddViewModel(savedStateHandle: SavedStateHandle,
             ProgressionAddUiState(progressionDetails = progressionUiState.progressionDetails, isEntryValid = valueString.isNotEmpty().and(valueString.toIntOrNull() != null), valueString = valueString)
     }
 
+    fun updateUiStateOnlyDialog(boolean: Boolean) {
+        progressionUiState =
+            ProgressionAddUiState(progressionDetails = progressionUiState.progressionDetails, isEntryValid = true, valueString = progressionUiState.valueString, openDateDialog = boolean)
+    }
+
     private fun validateInput(uiState: ProgressionDetails = progressionUiState.progressionDetails): Boolean {
         return with(uiState) {
             value > 0
