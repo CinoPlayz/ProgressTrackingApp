@@ -2,6 +2,7 @@ package xyz.nejcrozman.progress.shared.repositories
 
 import kotlinx.coroutines.flow.Flow
 import xyz.nejcrozman.progress.shared.entities.Progression
+import java.time.LocalDateTime
 
 interface ProgressionRepository {
     suspend fun insert(progression: Progression)
@@ -17,4 +18,6 @@ interface ProgressionRepository {
     fun getProgressionByTypeId(id: Int): Flow<List<Progression>>
 
     fun getAllProgressions(): Flow<List<Progression>>
+
+    fun getProgressionPreviousValue(type_id: Int, dateTime: LocalDateTime): Int
 }

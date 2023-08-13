@@ -77,6 +77,7 @@ data class ProgressionAddUiState(
 )
 
 
+
 data class ProgressionDetails (
     val id: Int = 0,
     val FK_type_id: Int = 0,
@@ -96,33 +97,5 @@ fun ProgressionDetails.toProgression(): Progression = Progression(
     dateOfLastEdit = dateOfLastEdit
 )
 
-
-
-
-
-
-class IconResource private constructor(
-    @DrawableRes private val resID: Int?,
-    private val imageVector: ImageVector?
-) {
-
-    @Composable
-    fun asPainterResource(): Painter {
-        resID?.let {
-            return painterResource(id = resID)
-        }
-        return rememberVectorPainter(image = imageVector!!)
-    }
-
-    companion object {
-        fun fromDrawableResource(@DrawableRes resID: Int): IconResource {
-            return IconResource(resID, null)
-        }
-
-        fun fromImageVector(imageVector: ImageVector?): IconResource {
-            return IconResource(null, imageVector)
-        }
-    }
-}
 
 

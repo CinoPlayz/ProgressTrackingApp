@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.shared.ProgressionAddUiState
 import xyz.nejcrozman.progress.shared.ProgressionDetails
@@ -34,13 +37,11 @@ class ProgressionAddViewModel(savedStateHandle: SavedStateHandle,
     }
 
     fun updateUiStateOnlyValueString(valueString: String) {
-        progressionUiState =
-            ProgressionAddUiState(progressionDetails = progressionUiState.progressionDetails, isEntryValid = valueString.isNotEmpty().and(valueString.toIntOrNull() != null), valueString = valueString)
+        progressionUiState = progressionUiState.copy(isEntryValid = valueString.isNotEmpty().and(valueString.toIntOrNull() != null), valueString = valueString)
     }
 
     fun updateUiStateOnlyDialog(boolean: Boolean) {
-        progressionUiState =
-            ProgressionAddUiState(progressionDetails = progressionUiState.progressionDetails, isEntryValid = true, valueString = progressionUiState.valueString, openDateDialog = boolean)
+        progressionUiState = progressionUiState.copy(openDateDialog = boolean)
     }
 
     private fun validateInput(uiState: ProgressionDetails = progressionUiState.progressionDetails): Boolean {
@@ -51,7 +52,12 @@ class ProgressionAddViewModel(savedStateHandle: SavedStateHandle,
 
     suspend fun saveType() {
         if (validateInput()) {
-            progressionRepository.insert(progressionUiState.progressionDetails.toProgression())
+            viewModelScope.launch(Dispatchers.IO){
+                val previousValue: Int = progressionRepository.getProgressionPreviousValue(progressionUiState.progressionDetails.FK_type_id, progressionUiState.progressionDetails.dateOfProgress)
+                val updateProgressDetails: ProgressionDetails = progressionUiState.progressionDetails.copy(value = progressionUiState.progressionDetails.value+previousValue)
+                progressionRepository.insert(updateProgressDetails.toProgression())
+            }
+
         }
     }
 

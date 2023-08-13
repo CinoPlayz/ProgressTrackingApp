@@ -20,7 +20,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -43,10 +43,10 @@ fun TypeAddScreen(navController: NavHostController, viewModel: TypeAddViewModel 
             title = {
                 Text(text = "Add Type")
             },
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.background
-            ),
+            colors = topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.primary,
+        titleContentColor = MaterialTheme.colorScheme.background
+        ),
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(

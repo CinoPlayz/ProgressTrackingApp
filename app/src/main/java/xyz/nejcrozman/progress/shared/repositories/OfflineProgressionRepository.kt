@@ -3,6 +3,7 @@ package xyz.nejcrozman.progress.shared.repositories
 import kotlinx.coroutines.flow.Flow
 import xyz.nejcrozman.progress.shared.daos.ProgressionDao
 import xyz.nejcrozman.progress.shared.entities.Progression
+import java.time.LocalDateTime
 
 class OfflineProgressionRepository(private val progressionDao: ProgressionDao): ProgressionRepository {
     override suspend fun insert(progression: Progression) = progressionDao.insert(progression)
@@ -18,4 +19,6 @@ class OfflineProgressionRepository(private val progressionDao: ProgressionDao): 
     override fun getProgressionByTypeId(id: Int): Flow<List<Progression>> = progressionDao.getProgressionsByTypeId(id)
 
     override fun getAllProgressions(): Flow<List<Progression>> = progressionDao.getAllProgressions()
+
+    override fun getProgressionPreviousValue(type_id: Int, dateTime: LocalDateTime): Int = progressionDao.getProgressionPreviousValue(type_id, dateTime)
 }
