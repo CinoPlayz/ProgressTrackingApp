@@ -34,10 +34,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import co.yml.charts.common.model.Point
 import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
+import xyz.nejcrozman.progress.shared.StraightLinechart
 import xyz.nejcrozman.progress.shared.entities.Progression
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -51,9 +56,9 @@ fun ProgressionListScreen(
                 Text(text = "Progress")
             },
             colors = topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primary,
-        titleContentColor = MaterialTheme.colorScheme.background
-        ),
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.background
+            ),
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
@@ -110,8 +115,36 @@ fun ProgressionListScreen(
                         fontSize = 24.sp
                     )
                 } else {
+                    //Graph
+                    val progressionList = progressionListUiState.value.progressionList
+                    fun con(localDateTime: LocalDateTime): Float{
+                        return localDateTime.toEpochSecond(
+                            ZoneId.systemDefault().rules.getOffset(
+                                Instant.now()
+                            )
+                        ).toFloat()
+                    }
+
+                    fun con(float: Float): LocalDateTime{
+                        return LocalDateTime.ofInstant(
+                                Instant.ofEpochSecond(float.toLong()),
+                        ZoneId.systemDefault())
+                    }
+                    
+                    val data = List(progressionList.size){
+                        Point(progressionList[it].dateOfProgress.dayOfMonth.toFloat(),progressionList[it].value.toFloat())
+                        
+                    }
+
+                    StraightLinechart(pointsData = data)
+
+
+
+                    //Display enteries
                     LazyColumn(modifier = Modifier) {
-                        items(items = progressionListUiState.value.progressionList, key = { it.progress_id }) { progression ->
+                        items(
+                            items = progressionListUiState.value.progressionList,
+                            key = { it.progress_id }) { progression ->
                             ProgressionDisplay(
                                 progression = progression,
                                 modifier = Modifier

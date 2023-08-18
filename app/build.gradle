@@ -52,7 +52,6 @@ android {
 kotlin {
     jvmToolchain(8)
 }
-
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
@@ -75,8 +74,7 @@ dependencies {
 
     implementation 'com.maxkeppeler.sheets-compose-dialogs:core:1.2.0'
     implementation 'com.maxkeppeler.sheets-compose-dialogs:calendar:1.2.0'
-
-
+    implementation 'co.yml:ycharts:2.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
