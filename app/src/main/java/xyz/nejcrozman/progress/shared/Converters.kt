@@ -32,6 +32,20 @@ class Converters {
         fun dateTimeToDate(dateTime: LocalDateTime): LocalDate {
             return dateTime.let { LocalDate.of(it.year, it.monthValue, it.dayOfMonth) }
         }
+
+        @TypeConverter
+        fun longToDateTime(value: Long): LocalDateTime {
+               return  LocalDateTime.ofInstant(
+                    Instant.ofEpochSecond(value),
+                    ZoneId.systemDefault()
+                )
+
+        }
+
+        @TypeConverter
+        fun dateTimeToLong(date: LocalDateTime): Long {
+            return date.toEpochSecond(ZoneId.systemDefault().rules.getOffset(Instant.now()))
+        }
     }
 
 }

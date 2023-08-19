@@ -37,12 +37,11 @@ import androidx.navigation.NavHostController
 import co.yml.charts.common.model.Point
 import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
-import xyz.nejcrozman.progress.shared.StraightLinechart
+import xyz.nejcrozman.progress.shared.StraightLineChart
 import xyz.nejcrozman.progress.shared.entities.Progression
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -117,26 +116,18 @@ fun ProgressionListScreen(
                 } else {
                     //Graph
                     val progressionList = progressionListUiState.value.progressionList
-                    fun con(localDateTime: LocalDateTime): Float{
-                        return localDateTime.toEpochSecond(
-                            ZoneId.systemDefault().rules.getOffset(
-                                Instant.now()
-                            )
-                        ).toFloat()
-                    }
 
-                    fun con(float: Float): LocalDateTime{
-                        return LocalDateTime.ofInstant(
-                                Instant.ofEpochSecond(float.toLong()),
-                        ZoneId.systemDefault())
-                    }
-                    
+                    val min = progressionList.minOf { it.dateOfProgress.toLocalDate().toEpochDay() }
+
                     val data = List(progressionList.size){
-                        Point(progressionList[it].dateOfProgress.dayOfMonth.toFloat(),progressionList[it].value.toFloat())
-                        
+                        Point(progressionList[it].dateOfProgress.toLocalDate().toEpochDay()-min.toFloat(),progressionList[it].value.toFloat())
+
                     }
 
-                    StraightLinechart(pointsData = data)
+
+                    StraightLineChart(pointsData = data,  xAxisDataFun =  ({
+                        LocalDate.ofEpochDay(min+it).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                    }))
 
 
 

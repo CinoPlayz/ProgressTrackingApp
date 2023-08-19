@@ -1,15 +1,17 @@
 package xyz.nejcrozman.progress.shared
 
-import android.graphics.Typeface
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
+import co.yml.charts.common.extensions.formatToSinglePrecision
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.GridLines
 import co.yml.charts.ui.linechart.model.IntersectionPoint
 import co.yml.charts.ui.linechart.model.Line
 import co.yml.charts.ui.linechart.model.LineChartData
@@ -19,33 +21,38 @@ import co.yml.charts.ui.linechart.model.LineType
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 
 @Composable
-fun StraightLinechart(pointsData: List<Point>) {
+fun StraightLineChart(pointsData: List<Point>, xAxisDataFun:(Int) -> String) {
+    val configuration = LocalConfiguration.current
+
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
     val xAxisData = AxisData.Builder()
-        .axisStepSize(40.dp)
-        .steps(pointsData.size)
-        .labelData { i -> i.toString() }
-        //.axisLabelAngle(20f)
+        //.axisStepSize(10.dp)
+        .steps(3)
+        .labelData {i -> xAxisDataFun(i)}
         .labelAndAxisLinePadding(15.dp)
-        .startDrawPadding(20.dp)
-        .axisLabelColor(Color.Blue)
-        .axisLineColor(Color.DarkGray)
-        .typeFace(Typeface.DEFAULT_BOLD)
+        .startDrawPadding(40.dp)
+        .axisLabelColor(MaterialTheme.colorScheme.tertiary)
+        .axisLineColor(MaterialTheme.colorScheme.tertiary)
         .build()
     val yAxisData = AxisData.Builder()
-        .steps(10)
-        .labelData { i -> i.toString() }
+        .steps(5)
+        .labelData { i -> val yMin = pointsData.minOf { it.y }
+            val yMax = pointsData.maxOf { it.y }
+            val yScale = (yMax - yMin) / 5
+            ((i * yScale) + yMin).formatToSinglePrecision() }
         .labelAndAxisLinePadding(30.dp)
-        .axisLabelColor(Color.Blue)
-        .axisLineColor(Color.DarkGray)
-        .typeFace(Typeface.DEFAULT_BOLD)
+        .axisLabelColor(MaterialTheme.colorScheme.tertiary)
+        .axisLineColor(MaterialTheme.colorScheme.tertiary)
         .build()
     val data = LineChartData(
+        gridLines = GridLines(MaterialTheme.colorScheme.outlineVariant),
         linePlotData = LinePlotData(
             lines = listOf(
                 Line(
                     dataPoints = pointsData,
-                    lineStyle = LineStyle(lineType = LineType.Straight(), color = Color.Blue),
-                    intersectionPoint = IntersectionPoint(color = Color.Red),
+                    lineStyle = LineStyle(lineType = LineType.Straight(), color = MaterialTheme.colorScheme.tertiary),
+                    intersectionPoint = IntersectionPoint(color = MaterialTheme.colorScheme.tertiary),
                     selectionHighlightPopUp = SelectionHighlightPopUp(popUpLabel = { x, y ->
                         val xLabel = "x : ${(x).toInt()} "
                         val yLabel = "y : ${String.format("%.2f", y)}"
@@ -55,12 +62,18 @@ fun StraightLinechart(pointsData: List<Point>) {
             )
         ),
         xAxisData = xAxisData,
-        yAxisData = yAxisData
+        yAxisData = yAxisData,
+        bottomPadding = 20.dp,
+        backgroundColor = MaterialTheme.colorScheme.background
+
     )
     LineChart(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(screenWidth+50.dp)
             .height(300.dp),
-        lineChartData = data
+        lineChartData = data,
+
+
+
     )
 }
