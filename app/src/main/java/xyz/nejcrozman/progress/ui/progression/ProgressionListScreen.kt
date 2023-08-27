@@ -89,6 +89,7 @@ fun ProgressionListScreen(
                     .fillMaxSize()
                     //.verticalScroll(rememberScrollState())
                     .padding(paddingScaffold),
+
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
 
@@ -127,6 +128,9 @@ fun ProgressionListScreen(
 
                     StraightLineChart(pointsData = data,  xAxisDataFun =  ({
                         LocalDate.ofEpochDay(min+it).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                    }),
+                    xAxisSelectionFun = ({
+                        LocalDate.ofEpochDay(min+it.toInt()).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
                     }))
 
 

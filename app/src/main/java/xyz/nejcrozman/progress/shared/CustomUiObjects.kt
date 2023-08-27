@@ -21,10 +21,9 @@ import co.yml.charts.ui.linechart.model.LineType
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 
 @Composable
-fun StraightLineChart(pointsData: List<Point>, xAxisDataFun:(Int) -> String) {
+fun StraightLineChart(pointsData: List<Point>, xAxisDataFun:(Int) -> String, xAxisSelectionFun:(Float) -> String) {
     val configuration = LocalConfiguration.current
 
-    val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     val xAxisData = AxisData.Builder()
         //.axisStepSize(10.dp)
@@ -54,7 +53,7 @@ fun StraightLineChart(pointsData: List<Point>, xAxisDataFun:(Int) -> String) {
                     lineStyle = LineStyle(lineType = LineType.Straight(), color = MaterialTheme.colorScheme.tertiary),
                     intersectionPoint = IntersectionPoint(color = MaterialTheme.colorScheme.tertiary),
                     selectionHighlightPopUp = SelectionHighlightPopUp(popUpLabel = { x, y ->
-                        val xLabel = "x : ${(x).toInt()} "
+                        val xLabel = "x : ${xAxisSelectionFun(x)} "
                         val yLabel = "y : ${String.format("%.2f", y)}"
                         "$xLabel $yLabel"
                     })
