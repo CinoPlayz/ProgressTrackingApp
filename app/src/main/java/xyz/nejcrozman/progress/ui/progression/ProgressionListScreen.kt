@@ -26,6 +26,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,11 +35,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import co.yml.charts.common.model.Point
+import com.patrykandpatrick.vico.compose.axis.axisLineComponent
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.axis.AxisPosition
+import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
-import xyz.nejcrozman.progress.shared.StraightLineChart
+import xyz.nejcrozman.progress.shared.Converters
 import xyz.nejcrozman.progress.shared.entities.Progression
+import xyz.nejcrozman.progress.shared.rememberMarker
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -115,28 +126,53 @@ fun ProgressionListScreen(
                         fontSize = 24.sp
                     )
                 } else {
-                    //Graph
-                    val progressionList = progressionListUiState.value.progressionList
 
-                    val min = progressionList.minOf { it.dateOfProgress.toLocalDate().toEpochDay() }
+                    //Display entries
+                    LazyColumn(modifier = Modifier
+                        ) {
+                        //Header
+                        item {
+                            //Chart
+                            val min = progressionListUiState.value.progressionList.minOf { Converters.dateTimeToDate(it.dateOfProgress).toEpochDay() }
 
-                    val data = List(progressionList.size){
-                        Point(progressionList[it].dateOfProgress.toLocalDate().toEpochDay()-min.toFloat(),progressionList[it].value.toFloat())
+                            if(progressionListUiState.value.updateData){
+                                val uiStateValues = progressionListUiState.value
+                                val entries: MutableList<FloatEntry> = mutableListOf()
 
-                    }
+                                for(progress in uiStateValues.progressionList){
+                                    entries.add(FloatEntry(Converters.dateTimeToDate(progress.dateOfProgress).toEpochDay()-min.toFloat(), progress.value.toFloat()))
+                                }
 
+                                println(entries)
 
-                    StraightLineChart(pointsData = data,  xAxisDataFun =  ({
-                        LocalDate.ofEpochDay(min+it).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-                    }),
-                    xAxisSelectionFun = ({
-                        LocalDate.ofEpochDay(min+it.toInt()).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-                    }))
+                                viewModel.updateModelProducer(entries)
+                                viewModel.updateStatusUpdateData()
+                            }
 
+                            val bottomAxisValueFormatter =
+                                AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, _ ->
+                                    LocalDate.ofEpochDay(min+x.toLong()).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                                }
 
+                            val marker = rememberMarker()
+                            ProvideChartStyle(m3ChartStyle()) {
+                                Chart(
+                                    chart =  lineChart(persistentMarkers = remember(marker) { mapOf(PERSISTENT_MARKER_X to marker) }),
+                                    chartModelProducer = viewModel.multiDataSetChartEntryModelProducer,
+                                    startAxis = rememberStartAxis(),
+                                    bottomAxis = rememberBottomAxis(valueFormatter = bottomAxisValueFormatter,
+                                        axis = axisLineComponent(strokeWidth = 10.dp)
+                                    ) ,
+                                    marker = marker,
+                                    getXStep = ({
+                                        println(it.entries.get(0).size.toFloat())
+                                        it.entries[0].size.toFloat()
+                                    })
+                                )
+                            }
+                        }
 
-                    //Display enteries
-                    LazyColumn(modifier = Modifier) {
+                        //Body
                         items(
                             items = progressionListUiState.value.progressionList,
                             key = { it.progress_id }) { progression ->
@@ -157,6 +193,9 @@ fun ProgressionListScreen(
             }
         })
 }
+
+
+private const val PERSISTENT_MARKER_X = 10f
 
 @Composable
 private fun ProgressionDisplay(
