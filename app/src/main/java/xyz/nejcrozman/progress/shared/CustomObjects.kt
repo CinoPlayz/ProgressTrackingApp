@@ -65,11 +65,10 @@ fun <T> Flow<T>.mutableStateIn(
 data class ProgressionUiState(
     val progressionDetails: ProgressionDetails = ProgressionDetails(),
     val isEntryValid: Boolean = false
-
 )
 
 
-data class ProgressionAddUiState(
+data class ProgressionDialogAndNumberUiState(
     val progressionDetails: ProgressionDetails = ProgressionDetails(),
     val isEntryValid: Boolean = true,
     val valueString: String = "1",

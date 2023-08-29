@@ -143,8 +143,6 @@ fun ProgressionListScreen(
                                     entries.add(FloatEntry(Converters.dateTimeToDate(progress.dateOfProgress).toEpochDay()-min.toFloat(), progress.value.toFloat()))
                                 }
 
-                                println(entries)
-
                                 viewModel.updateModelProducer(entries)
                                 viewModel.updateStatusUpdateData()
                             }
@@ -165,7 +163,6 @@ fun ProgressionListScreen(
                                     ) ,
                                     marker = marker,
                                     getXStep = ({
-                                        println(it.entries.get(0).size.toFloat())
                                         it.entries[0].size.toFloat()
                                     })
                                 )
