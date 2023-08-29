@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import xyz.nejcrozman.progress.ProgressApplication
 import xyz.nejcrozman.progress.ui.progression.ProgressionAddViewModel
+import xyz.nejcrozman.progress.ui.progression.ProgressionEditViewModel
 import xyz.nejcrozman.progress.ui.progression.ProgressionListViewModel
 import xyz.nejcrozman.progress.ui.types.TypeAddViewModel
 import xyz.nejcrozman.progress.ui.types.TypeDetailsViewModel
@@ -56,6 +57,14 @@ object AppViewModelProvider {
         // Initializer for ProgressionAddViewModel
         initializer {
             ProgressionAddViewModel(
+                this.createSavedStateHandle(),
+                progressApplication().container.progressionRepository
+            )
+        }
+
+        // Initializer for ProgressionEditViewModel
+        initializer {
+            ProgressionEditViewModel(
                 this.createSavedStateHandle(),
                 progressApplication().container.progressionRepository
             )

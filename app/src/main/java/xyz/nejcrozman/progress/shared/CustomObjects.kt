@@ -1,11 +1,5 @@
 package xyz.nejcrozman.progress.shared
 
-import androidx.annotation.DrawableRes
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,6 +62,12 @@ fun <T> Flow<T>.mutableStateIn(
     return flow
 }
 
+data class ProgressionUiState(
+    val progressionDetails: ProgressionDetails = ProgressionDetails(),
+    val isEntryValid: Boolean = false
+
+)
+
 
 data class ProgressionAddUiState(
     val progressionDetails: ProgressionDetails = ProgressionDetails(),
@@ -91,6 +91,14 @@ data class ProgressionDetails (
  * */
 fun ProgressionDetails.toProgression(): Progression = Progression(
     progress_id = id,
+    FK_type_id = FK_type_id,
+    value = value,
+    dateOfProgress = dateOfProgress,
+    dateOfLastEdit = dateOfLastEdit
+)
+
+fun Progression.toProgressionDetails(): ProgressionDetails = ProgressionDetails(
+    id = progress_id,
     FK_type_id = FK_type_id,
     value = value,
     dateOfProgress = dateOfProgress,

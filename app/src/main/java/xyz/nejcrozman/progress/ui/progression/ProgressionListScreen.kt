@@ -181,7 +181,7 @@ fun ProgressionListScreen(
                                 modifier = Modifier
                                     .padding(10.dp)
                                     .combinedClickable(
-                                        onClick = { println("On click") /*TODO edit date*/ },
+                                        onClick = { navController.navigate("${Destinations.ProgressionEdit.route}/${progression.progress_id}") /*TODO edit date*/ },
                                         onLongClick = { /*TODO Delete enterie*/ /*navController.navigate("${Destinations.TypesDetail.route}/${type.type_id}")*/ },
                                     )
                             )

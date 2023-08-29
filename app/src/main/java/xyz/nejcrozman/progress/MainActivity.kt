@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import xyz.nejcrozman.progress.ui.progression.ProgressionAddScreen
+import xyz.nejcrozman.progress.ui.progression.ProgressionEditScreen
 import xyz.nejcrozman.progress.ui.progression.ProgressionListScreen
 import xyz.nejcrozman.progress.ui.theme.ProgressTheme
 import xyz.nejcrozman.progress.ui.types.TypeAddScreen
@@ -75,6 +76,13 @@ fun NavigationAppHost(navController: NavHostController) {
                 type = NavType.IntType
             })){
             ProgressionAddScreen(navController = navController)
+        }
+
+        composable(route = Destinations.ProgressionEdit.routeWithArgs,
+            arguments = listOf(navArgument(Destinations.ProgressionEdit.itemIdArg) {
+                type = NavType.IntType
+            })){
+            ProgressionEditScreen(navController = navController)
         }
     }
 
