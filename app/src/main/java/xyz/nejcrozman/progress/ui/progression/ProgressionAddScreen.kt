@@ -34,7 +34,9 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.launch
+import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.shared.Converters
+import xyz.nejcrozman.progress.shared.recreateRoute
 import xyz.nejcrozman.progress.shared.toProgression
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 
@@ -142,7 +144,7 @@ fun ProgressionAddScreen(
                     )
                     coroutineScope.launch {
                         viewModel.saveType()
-                        navController.popBackStack()
+                        recreateRoute(navController, "${Destinations.ProgressionList.route}/${viewModel.progressionUiState.progressionDetails.FK_type_id}")
                     }
                 }) {
                 Text(text = "ADD")
