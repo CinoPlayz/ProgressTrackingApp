@@ -1,5 +1,6 @@
 package xyz.nejcrozman.progress.shared
 
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,14 +30,14 @@ fun TypeDetails.toType(): Type = Type(
     name = name
 )
 
-
+/*
 /**
- * Extension function to convert [Type] to [TypeUiState]
+ * Extension function to convert [Ty] to [TypeUiState]
  */
 fun Type.toTypeUiState(isEntryValid: Boolean = false): TypeUiState = TypeUiState(
     typeDetails = this.toTypeDetails(),
     isEntryValid = isEntryValid
-)
+)*/
 
 /**
  * Extension function to convert [Type] to [TypeDetails]
@@ -54,7 +55,7 @@ fun <T> Flow<T>.mutableStateIn(
     val flow = MutableStateFlow(initialValue)
 
     scope.launch {
-        withTimeoutOrNull(timeout){
+        withTimeoutOrNull(timeout) {
             this@mutableStateIn.collect(flow)
         }
     }
@@ -62,9 +63,21 @@ fun <T> Flow<T>.mutableStateIn(
     return flow
 }
 
-data class ProgressionUiState(
-    val progressionDetails: ProgressionDetails = ProgressionDetails(),
-    val isEntryValid: Boolean = false
+fun recreateRoute(navController: NavHostController, route: String, inclusive: Boolean = true){
+    navController.popBackStack(route = route, inclusive = inclusive)
+    navController.navigate(route = route)
+}
+
+
+/**
+ * Ui State for ProgressionList
+ */
+data class ProgressionListUiState(
+    val progressionList: List<Progression> = listOf(),
+    val typeId: Int = 0,
+    val updateData: Boolean = true,
+    val openDeleteDialog: Boolean = false,
+    val progressionId: Int = 0
 )
 
 
@@ -76,8 +89,7 @@ data class ProgressionDialogAndNumberUiState(
 )
 
 
-
-data class ProgressionDetails (
+data class ProgressionDetails(
     val id: Int = 0,
     val FK_type_id: Int = 0,
     val value: Int = 1,

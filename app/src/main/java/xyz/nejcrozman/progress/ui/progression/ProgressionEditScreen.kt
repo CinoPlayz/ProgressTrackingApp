@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
 import xyz.nejcrozman.progress.shared.Converters
+import xyz.nejcrozman.progress.shared.recreateRoute
 import xyz.nejcrozman.progress.shared.toProgression
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 
@@ -155,8 +156,7 @@ fun ProgressionEditScreen(
                             )
 
                             viewModel.updateProgress()
-                            navController.popBackStack(route = "${Destinations.ProgressionList.route}/${uiState.value.progressionDetails.FK_type_id}", inclusive = true)
-                            navController.navigate("${Destinations.ProgressionList.route}/${uiState.value.progressionDetails.FK_type_id}")
+                            recreateRoute(navController, "${Destinations.ProgressionList.route}/${uiState.value.progressionDetails.FK_type_id}")
                         }
                     }) {
                     Text(text = "UPDATE")

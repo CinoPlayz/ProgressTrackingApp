@@ -13,6 +13,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +30,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -49,6 +53,7 @@ import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
 import xyz.nejcrozman.progress.shared.Converters
 import xyz.nejcrozman.progress.shared.entities.Progression
+import xyz.nejcrozman.progress.shared.recreateRoute
 import xyz.nejcrozman.progress.shared.rememberMarker
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 import java.time.LocalDate
@@ -60,6 +65,9 @@ fun ProgressionListScreen(
     navController: NavHostController,
     viewModel: ProgressionListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState = viewModel.progressionListUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -178,14 +186,51 @@ fun ProgressionListScreen(
                                 modifier = Modifier
                                     .padding(10.dp)
                                     .combinedClickable(
-                                        onClick = { navController.navigate("${Destinations.ProgressionEdit.route}/${progression.progress_id}") /*TODO edit date*/ },
-                                        onLongClick = { /*TODO Delete enterie*/ /*navController.navigate("${Destinations.TypesDetail.route}/${type.type_id}")*/ },
+                                        onClick = { navController.navigate("${Destinations.ProgressionEdit.route}/${progression.progress_id}") },
+                                        onLongClick = { viewModel.updateUiStateDialog(true)
+                                                      viewModel.updateUiProgressionId(progression.progress_id)},
                                     )
                             )
 
 
                         }
                     }
+                }
+
+
+                if(uiState.value.openDeleteDialog){
+                    AlertDialog(onDismissRequest = {  viewModel.updateUiStateDialog(false)},
+                        title = {
+                            Text(text = "Attention")
+                        },
+                        text = {
+                            Text(text = "Are you sure you want to delete?")
+                        },
+
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    viewModel.updateUiStateDialog(false)
+                                    viewModel.deleteType(coroutineScope)
+                                    recreateRoute(navController, "${Destinations.ProgressionList.route}/${uiState.value.typeId}")
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) {
+                                Text("Yes")
+                            }
+                        },
+                        dismissButton = {
+                            Button(
+
+                                onClick = {
+                                    viewModel.updateUiStateDialog(false)
+                                }) {
+                                Text("No")
+                            }
+                        }
+
+                    )
+
+
                 }
             }
         })

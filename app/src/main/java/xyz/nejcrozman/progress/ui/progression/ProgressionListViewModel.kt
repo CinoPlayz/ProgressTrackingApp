@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import xyz.nejcrozman.progress.Destinations
-import xyz.nejcrozman.progress.shared.entities.Progression
+import xyz.nejcrozman.progress.shared.ProgressionListUiState
 import xyz.nejcrozman.progress.shared.mutableStateIn
 import xyz.nejcrozman.progress.shared.repositories.ProgressionRepository
 import xyz.nejcrozman.progress.ui.types.TypeDetailsViewModel
@@ -18,7 +20,7 @@ import xyz.nejcrozman.progress.ui.types.TypeDetailsViewModel
  * ViewModel to retrieve all items in the Room database.
  */
 class ProgressionListViewModel(savedStateHandle: SavedStateHandle,
-                               progressionRepository: ProgressionRepository) : ViewModel() {
+                               private val progressionRepository: ProgressionRepository) : ViewModel() {
 
     private val typeId: Int = checkNotNull(savedStateHandle[Destinations.ProgressionList.itemIdArg])
     internal val multiDataSetChartEntryModelProducer: ChartEntryModelProducer = ChartEntryModelProducer()
@@ -35,18 +37,26 @@ class ProgressionListViewModel(savedStateHandle: SavedStateHandle,
             )
 
 
+    fun updateUiStateDialog(boolean: Boolean){
+        progressionListUiState.update { progressionListUiState.value.copy(openDeleteDialog = boolean) }
+    }
 
     fun updateStatusUpdateData(){
         progressionListUiState.update { progressionListUiState.value.copy(updateData = false) }
+    }
+
+    fun updateUiProgressionId(id: Int){
+        progressionListUiState.update { progressionListUiState.value.copy(progressionId = id) }
     }
 
     fun updateModelProducer(entries: List<FloatEntry>){
         multiDataSetChartEntryModelProducer.setEntries(entries)
     }
 
-}
+    fun deleteType(coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            progressionRepository.deleteById(progressionListUiState.value.progressionId)
+        }
+    }
 
-/**
- * Ui State for HomeScreen
- */
-data class ProgressionListUiState(val progressionList: List<Progression> = listOf(), val typeId: Int = 0, val updateData: Boolean = true                                 )
+}
