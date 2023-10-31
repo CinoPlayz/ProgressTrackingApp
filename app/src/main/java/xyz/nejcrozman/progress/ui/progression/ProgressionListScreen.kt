@@ -1,12 +1,17 @@
 package xyz.nejcrozman.progress.ui.progression
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,18 +56,21 @@ import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.renderer.XAxisRenderer
 import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.Transformer
 import com.github.mikephil.charting.utils.Utils
 import com.github.mikephil.charting.utils.ViewPortHandler
+import com.google.android.material.card.MaterialCardView
 import xyz.nejcrozman.progress.Destinations
 import xyz.nejcrozman.progress.R
 import xyz.nejcrozman.progress.shared.entities.Progression
@@ -70,6 +78,7 @@ import xyz.nejcrozman.progress.shared.recreateRoute
 import xyz.nejcrozman.progress.ui.AppViewModelProvider
 import java.time.Instant
 import java.time.ZoneId
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -163,6 +172,7 @@ fun ProgressionListScreen(
                             }) { lineChartData ->
 
                                 val colorScheme = MaterialTheme.colorScheme
+                                val isSystemDark = isSystemInDarkTheme()
                                 AndroidView(
                                     factory = { context ->
                                         //Creates a LineChart with width and height parameters
@@ -198,8 +208,8 @@ fun ProgressionListScreen(
                                                 )
                                                 xAxis.labelRotationAngle = 5f
 
-
                                                 axisRight.isEnabled = false
+                                                axisLeft.textColor = colorScheme.onBackground.toArgb()
                                                 //Presledki na straneh
                                                 extraRightOffset = 10f
                                                 extraLeftOffset = 10f
@@ -215,6 +225,8 @@ fun ProgressionListScreen(
                                                 legend.textSize = 15F
                                                 legend.form = Legend.LegendForm.LINE
                                                 legend.textColor = colorScheme.onBackground.toArgb()
+
+                                                marker = MyMarker(context, listProgress = lineChartData, isSystemDark)
                                             }
 
                                         }
@@ -340,15 +352,17 @@ fun updateLineChartWithData(
 
     //Sets colors and add a gradient under the line
     progressDataSet.enableDashedLine(20f, 10f, 0f)
-    progressDataSet.setDrawFilled(true)
     progressDataSet.color = colorScheme.onBackground.toArgb()
     progressDataSet.valueTextColor = colorScheme.secondary.toArgb()
+
+    progressDataSet.setDrawFilled(true)
 
     val fillGradient = GradientDrawable(
         GradientDrawable.Orientation.TOP_BOTTOM,
         intArrayOf(colorScheme.primary.toArgb(), colorScheme.secondary.toArgb())
     )
     progressDataSet.fillDrawable = fillGradient
+    progressDataSet.setDrawValues(false)
 
     val dataSet = ArrayList<ILineDataSet>()
     dataSet.add(progressDataSet)
@@ -405,6 +419,28 @@ class MyAxisFormatter(itemsPassed: List<String>) : IndexAxisValueFormatter() {
         } else {
             null
         }
+    }
+}
+
+@SuppressLint("ViewConstructor")
+class MyMarker(context: Context, val listProgress: List<Progression>, private val isDark: Boolean) : MarkerView(context, R.layout.marker) {
+
+    override fun refreshContent(entry: Entry, highlight: Highlight) {
+        super.refreshContent(entry, highlight)
+        val textView = findViewById<TextView>(R.id.textViewValue)
+        val cardView = findViewById<MaterialCardView>(R.id.cardView)
+        textView.text = String.format(resources.getString(R.string.markerText), entry.y.toInt(), listProgress[entry.x.toInt()].getDOPFormatted)
+
+
+        if(isDark){
+            textView.setTextColor(Color.parseColor("#C0C7CD"))
+            cardView.setCardBackgroundColor(Color.parseColor("#40484D"))
+        }
+        else{
+            textView.setTextColor(Color.parseColor("#40484D"))
+            cardView.setCardBackgroundColor(Color.parseColor("#DCE3E9"))
+        }
+
     }
 }
 
