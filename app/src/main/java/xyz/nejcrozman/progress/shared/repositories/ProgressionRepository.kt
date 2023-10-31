@@ -17,6 +17,8 @@ interface ProgressionRepository {
 
     fun getProgressionByTypeId(id: Int): Flow<List<Progression>>
 
+    fun getProgressionByTypeIdDESC(id: Int): Flow<List<Progression>>
+
     fun getAllProgressions(): Flow<List<Progression>>
 
     fun getProgressionPreviousValue(type_id: Int, dateTime: LocalDateTime): Int

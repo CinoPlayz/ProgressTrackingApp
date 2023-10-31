@@ -18,6 +18,8 @@ class OfflineProgressionRepository(private val progressionDao: ProgressionDao): 
 
     override fun getProgressionByTypeId(id: Int): Flow<List<Progression>> = progressionDao.getProgressionsByTypeId(id)
 
+    override fun getProgressionByTypeIdDESC(id: Int): Flow<List<Progression>> = progressionDao.getProgressionsByTypeIdDESC(id)
+
     override fun getAllProgressions(): Flow<List<Progression>> = progressionDao.getAllProgressions()
 
     override fun getProgressionPreviousValue(type_id: Int, dateTime: LocalDateTime): Int = progressionDao.getProgressionPreviousValue(type_id, dateTime)

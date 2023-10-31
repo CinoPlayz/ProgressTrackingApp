@@ -3,8 +3,6 @@ package xyz.nejcrozman.progress.ui.progression
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.FloatEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -23,13 +21,12 @@ class ProgressionListViewModel(savedStateHandle: SavedStateHandle,
                                private val progressionRepository: ProgressionRepository) : ViewModel() {
 
     private val typeId: Int = checkNotNull(savedStateHandle[Destinations.ProgressionList.itemIdArg])
-    internal val multiDataSetChartEntryModelProducer: ChartEntryModelProducer = ChartEntryModelProducer()
     /**
      * Holds home ui state. The list of items are retrieved from [ProgressionRepository] and mapped to
      * [progressionListUiState]
      */
     val progressionListUiState: MutableStateFlow<ProgressionListUiState> =
-        progressionRepository.getProgressionByTypeId(typeId).map {ProgressionListUiState(it, typeId) }
+        progressionRepository.getProgressionByTypeIdDESC(typeId).map {ProgressionListUiState(it, typeId) }
             .mutableStateIn(
                 scope = viewModelScope,
                 timeout = TypeDetailsViewModel.TIMEOUT_MILLIS,
@@ -49,9 +46,6 @@ class ProgressionListViewModel(savedStateHandle: SavedStateHandle,
         progressionListUiState.update { progressionListUiState.value.copy(progressionId = id) }
     }
 
-    fun updateModelProducer(entries: List<FloatEntry>){
-        multiDataSetChartEntryModelProducer.setEntries(entries)
-    }
 
     fun deleteType(coroutineScope: CoroutineScope) {
         coroutineScope.launch {
